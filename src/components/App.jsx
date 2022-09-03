@@ -5,8 +5,15 @@ import { Filter } from './Filter/Filter';
 import { Container } from './Container.styled';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { addContacts, removeContacts, setFilter } from '../redux/actions';
-import { getContacts, getFilter } from '../redux/selectors';
+import {
+  addContacts,
+  removeContacts,
+} from '../redux/contacts/contacts-actions';
+
+import { setFilter } from 'redux/filter/filter-actions';
+// import { getContacts, getFilter } from '../redux/selectors';
+import { getContacts } from 'redux/contacts/contacts-selectors';
+import { getFilter } from 'redux/filter/filter-selectors';
 
 export const App = () => {
   const contacts = useSelector(getContacts);
