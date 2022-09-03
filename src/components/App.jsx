@@ -5,58 +5,46 @@ import { Filter } from './Filter/Filter';
 import { Container } from './Container.styled';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { addContacts } from '../redux/actions';
-import { ContactsContainer } from './RenderContactsList/ContactsContainer.styled';
-
-// const initialValues = [
-//   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-//   { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-//   { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-//   { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-// ];
+import { addContacts, removeContacts, setFilter } from '../redux/actions';
+import { getContacts, getFilter } from '../redux/selectors';
 
 export const App = () => {
-  const contacts = useSelector(store => store.contacts);
-
-  // const [contacts, setContacts] = useState([...initialValues]);
-  const [filter, setFilter] = useState('');
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+  // const [filter, setFilter] = useState('');
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
-
-  const filterChange = event => {
-    setFilter(event.target.value);
-  };
 
   const getFilteredContacts = () =>
     contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
 
-  // const deleteContact = id => {
-  //   setContacts(prevContact =>
-  //     prevContact.filter(contact => contact.id !== id)
-  //   );
-  // };
   const dispatch = useDispatch();
 
   const formSubmitHandler = payload => {
-    const action = addContacts(payload);
+    const findSimilarContact = contacts.find(
+      contact => contact.name === payload.name
+    );
+
+    if (findSimilarContact) {
+      alert('Contact already exists');
+    } else {
+      const action = addContacts(payload);
+      dispatch(action);
+    }
+  };
+  const deleteContact = payload => {
+    const action = removeContacts(payload);
     dispatch(action);
   };
 
-  // const formSubmitHandler = ({ name, number }) => {
-  //   const newContact = { id: nanoid(5), name, number };
-  //   const findSimilarContact = contacts.find(contact => contact.name === name);
-
-  //   if (findSimilarContact) {
-  //     alert('Contact already exists');
-  //   }
-  //   // else {
-  //   //   setContacts([...contacts, newContact]);
-  //   // }
-  // };
+  const filterChange = event => {
+    const action = setFilter(event.target.value);
+    dispatch(action);
+  };
 
   return (
     <Container>
@@ -67,7 +55,7 @@ export const App = () => {
       <>
         <RenderContactsList
           contactsList={getFilteredContacts()}
-          // onDeleteContact={deleteContact}
+          onDeleteContact={deleteContact}
         />
       </>
     </Container>
