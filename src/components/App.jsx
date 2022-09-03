@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { FormContacts } from './FormContacts/FormContacts';
 import { RenderContactsList } from './RenderContactsList/RenderContactsList';
 import { Filter } from './Filter/Filter';
@@ -11,7 +11,6 @@ import { getContacts, getFilter } from '../redux/selectors';
 export const App = () => {
   const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
-  // const [filter, setFilter] = useState('');
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
